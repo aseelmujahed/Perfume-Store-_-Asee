@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <h1>Perfume Store</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div id="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <section id="products">
+        <h2>Our Products</h2>
+        <input type="text" id="search" placeholder="Search products...">
+        <div id="product-list"></div>
+
+        <div id="c">
+            <button id="proceed-to-payment"></button>
+        </div>
+    </section>
+
+    <div id="payment-modal2" class="modal2">
+        <div class="modal2-content">
+            <div class="modal2-header">
+                <h5>Select Payment Method</h5>
+                <button class="btn-close" onclick="closeModal2()">&times;</button>
+            </div>
+            <div class="modal2-body">
+                <div class="btn-option" id="credit-card-btn">
+                    <span>Credit Card</span>
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="btn-option" id="paypal-btn">
+                    <span>PayPal</span>
+                    <i class="fab fa-paypal"></i>
+                </div>
+                <div class="btn-option" id="cash-on-delivery-btn">
+                    <span>Cash on delivery</span>
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+
+                <form id="credit-card-form" class="payment-form">
+
+                    <label for="card-number" class="form-label">Card Number</label>
+                    <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456">
+                    <label for="card-expiry" class="form-label">Expiry Date</label>
+                    <input type="text" class="form-control" id="card-expiry" placeholder="MM/YY">
+                    <label for="card-cvv" class="form-label">CVV</label>
+                    <input type="text" class="form-control" id="card-cvv" placeholder="123">
+                    <p id="credit-card-error" class="error"></p>
+                    <button type="submit" class="btn">Pay Now</button>
+                </form>
+
+                <form id="paypal-form" class="payment-form">
+
+                    <label for="paypal-email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="paypal-email" placeholder="example@email.com">
+                    <p id="paypal-error" class="error"></p>
+                    <button type="submit" class="btn">Pay with PayPal</button>
+                </form>
+                <form id="cash-on-delivery-form" class="payment-form">
+                    <label for="delivery-address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="delivery-address" placeholder="Enter your address">
+
+                    <label for="phone-number" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone-number" placeholder="Enter your phone number"
+                        pattern="[0-9]{10}" required>
+
+                    <p id="cash-on-delivery-error" class="error"></p>
+                    <button type="submit" class="btn">Confirm Order</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+    <div id="product-modal"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; z-index: 1000;">
+        <button id="close-modal" style="position: absolute; top: 10px; right: 10px;">&times;</button>
+        <h3 id="modal-title"></h3>
+        <img id="modal-image" src="" alt="Product Image" style="max-width: 100%; height: auto; margin-bottom: 10px;">
+        <p id="modal-body"></p>
+        <p><strong>Price:</strong> $<span id="modal-price"></span></p>
+    </div>
+    <div id="modal-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;">
+    </div>
+
+    <div id="modal-overlay"></div>
+
+    <div id="notification"
+        style="display: none; position: fixed; bottom: 20px; right: 20px; background: #21867a; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    </div>
+
+    <footer>
+        <p>Follow us on
+            <a href="https://www.facebook.com/" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/?lang=ar" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+        </p>
+        <p>&copy; 2024 Perfume Store. All rights reserved.</p>
+
+    </footer>
+
+    <script>
+        $(document).ready(function () {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+            function updateCartCount() {
+                const cartCount = $("#cart-count");
+                cartCount.text(cart.reduce((total, item) => total + item.quantity, 0));
+            }
+
+            function addToCart(productId, productTitle, productPrice, productQuantity, productImage) {
+                const existingItem = cart.find(item => item.id === productId);
+                if (existingItem) {
+                    existingItem.quantity += productQuantity;
+                } else {
+                    cart.push({
+                        id: productId,
+                        title: productTitle,
+                        price: productPrice,
+                        quantity: productQuantity,
+                        image: productImage
+                    });
+                }
+                localStorage.setItem("cart", JSON.stringify(cart));
+                updateCartCount();
+                showNotification(`Added to your cart successfully!`);
+            }
+
+            function showNotification(message) {
+                const notification = $('#notification');
+                notification.text(message);
+                notification.fadeIn();
+                setTimeout(() => {
+                    notification.fadeOut();
+                }, 2000);
+            }
+
+            $("#cart-icon").on("click", function () {
+                window.location.href = "cart.html"; 
+            });
+
+            $(document).on("click", ".add-to-cart", function () {
+                const productElement = $(this).closest(".product");
+                const productId = parseInt(productElement.data("id"));
+                const productTitle = productElement.data("title");
+                const productPrice = parseFloat(productElement.data("price"));
+                const productImage = productElement.find("img").attr("src");
+                const productQuantity = parseInt(productElement.find(".quantity").val());
+
+                addToCart(productId, productTitle, productPrice, productQuantity, productImage);
+            });
+
+            function fetchProducts() {
+                const fixedPrices = [50, 70, 65, 80, 120, 130, 55, 75, 95, 100, 60, 85];
+                const productImages = [
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/g/u/gucci_bamboo_75_ml_edp_perfume_for_women.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/e/m/emper_memories100ml_perfume_for_men.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/d/o/dolce_gabbana_the_one_grey_100ml_edt_perfume_for_men_2_.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/r/a/ralph_lauren_polo_black_edt_125ml_perfume_for_men.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/_/1/_1_-_1-3348900606715.png",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/_/_/___c__c_h_chanel_gabrielle_100ml_edp_35.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/g/e/geparlys_pure_sensual_women_s_edp_100ml.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/c/a/calvin_klein_eternity_now_100ml_edt_perfume_for_men.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/d/a/davidoff_run_wild_for_her_100ml_edp_perfume_for_women_1_.jpg",
+                    "https://luliz.com/media/catalog/product/cache/fd1c54bf38e775195f44181af8d62c4b/s/i/si_by_giorgio_armani_100ml_edp_perfume_for_women.jpg",
+                    "https://www.sephora.com/productimages/sku/s1237379-main-zoom.jpg?imwidth=250",
+                    "https://www.ogbeauty.in/cdn/shop/files/Smokey_Listing_image2.jpg?v=1706684821"
+                ];
+
+                $.ajax({
+                    url: 'https://jsonplaceholder.typicode.com/posts',
+                    method: 'GET',
+                    success: function (data) {
+                        const filteredData = data.filter(product => product.title.length <= 25).slice(0, 12);
+                        let productsHTML = '';
+                        filteredData.forEach((product, index) => {
+                            productsHTML += `
+                                <div class="product" data-id="${product.id}" data-title="${product.title}" data-price="${fixedPrices[index]}">
+                                    <h3>${product.title}</h3>
+                                    <img src="${productImages[index]}" alt="Product image">
+                                    <p id="r">${product.body}</p>
+                                    <p><strong>Price:</strong> $<span class="product-price">${fixedPrices[index]}</span></p>
+                                    <label for="quantity-${product.id}">Quantity:</label>
+                                    <input type="number" id="quantity-${product.id}" class="quantity" value="1" min="1">
+                                    <button class="add-to-cart">Add to Cart</button>
+                                </div>
+                            `;
+                        });
+                        $('#product-list').html(productsHTML);
+                    },
+                    error: function () {
+                        console.error("Error fetching products");
+                    }
+                });
+            }
+
+            fetchProducts();
+            updateCartCount();
+        });
+  
+        function showNotification(message) {
+            const notification = $('#notification');
+            notification.text(message);
+            notification.fadeIn();
+
+            setTimeout(() => {
+                notification.fadeOut();
+            }, 2000);
+        }
+
+        $('#search').on('input', function () {
+            const searchValue = $(this).val().toLowerCase();
+            $('.product').each(function () {
+                const title = $(this).find('h3').text().toLowerCase();
+                $(this).toggle(title.startsWith(searchValue));
+            });
+        });
+
+        $('#contact-form').on('submit', function (event) {
+            event.preventDefault();
+            alert('Thank you for your message!');
+            $(this).trigger('reset');
+        });
+
+        $('nav a').on('click', function (e) {
+            if (this.hash !== '') {
+                e.preventDefault();
+                const target = $(this.hash);
+                $('html, body').animate(
+                    { scrollTop: target.offset().top - 140 },
+                    800
+                );
+            }
+        });
+
+        $(document).on('click', '.product img', function () {
+            const product = $(this).closest('.product');
+            const title = product.data('title');
+            const price = product.data('price');
+            const description = product.find('p').first().text();
+            const image = $(this).attr('src');
+
+            $('#modal-title').text(title);
+            $('#modal-price').text(price);
+            $('#modal-body').text(description);
+            $('#modal-image').attr('src', image);
+
+            $('#product-modal, #modal-overlay').fadeIn();
+        });
+
+
+        $('#close-modal, #modal-overlay').on('click', function () {
+            $('#product-modal, #modal-overlay').fadeOut();
+        });
+
+        document.getElementById('cash-on-delivery-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const address = document.getElementById('delivery-address').value.trim();
+            const phoneNumber = document.getElementById('phone-number').value.trim();
+            const errorElement = document.getElementById('cash-on-delivery-error');
+
+            if (!address || !phoneNumber) {
+                errorElement.textContent = 'Please enter your address and phone number.';
+                return;
+            }
+
+            if (!/^\d{10}$/.test(phoneNumber)) {
+                errorElement.textContent = 'Please enter a valid 10-digit phone number.';
+                return;
+            }
+
+            errorElement.textContent = '';
+            alert('Order confirmed!');
+            closeModal2();
+        });
+
+        function resetTotal() {
+            cart.length = 0;
+            updateCart();
+        }
+
+        document.querySelectorAll('.btn-option').forEach(option => {
+            option.addEventListener('click', () => {
+                document.querySelectorAll('.btn-option').forEach(btn => btn.classList.remove('active'));
+                option.classList.add('active');
+            });
+        });
+
+        $(document).ready(function () {
+            fetchProducts();
+        });
+
+    </script>
+</body>
+
+</html>

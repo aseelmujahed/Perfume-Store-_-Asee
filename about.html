@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfume Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <style>
+        section {
+            padding: 40px;
+            margin: 20px auto;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #4a90e2;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #333;
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+
+        p {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .team {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .team-member {
+            background: #f2f2f2;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            width: calc(33.333% - 20px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member h4 {
+            margin: 0;
+            color: #4a90e2;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            text-align: left;
+            flex: 0 0 auto;
+        }
+
+        nav {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding-right: 190px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+
+        @media (max-width: 488px) {
+            .team-member {
+                width: 100%;
+            }
+
+            nav {
+                flex: 1;
+                display: flex;
+
+                padding-left: 190px;
+
+            }
+
+            nav ul li a {
+                white-space: nowrap;
+                text-align: center;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>Perfume Store</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="Products.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="notification"
+        style="display: none; position: fixed; bottom: 20px; right: 20px; background: #21867a; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    </div>
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Welcome to Perfume Store, your number one source for all things fragrance. We're dedicated to providing you
+            the very best of perfumes, with an emphasis on quality, uniqueness, and customer service.</p>
+    </section>
+
+    <section id="mission">
+        <h3>Our Mission</h3>
+        <p>Our mission is to bring you the finest selection of perfumes from around the world, ensuring that you find
+            the perfect scent that matches your personality and style.</p>
+    </section>
+
+    <section id="history">
+        <h3>Our History</h3>
+        <p>Founded in 2020, Perfume Store has come a long way from its beginnings. When we first started out, our
+            passion for perfumes drove us to do tons of research so that Perfume Store can offer you the most unique
+            fragrances. We now serve customers all over the country and are thrilled to be a part of the fragrance
+            industry.</p>
+    </section>
+
+    <section id="team">
+        <h3>Meet Our Team</h3>
+        <div class="team">
+            <div class="team-member">
+                <h4>Jane Doe</h4>
+                <p>Founder & CEO</p>
+                <p>Jane has over 10 years of experience in the fragrance industry and is passionate about helping
+                    customers find their signature scent.</p>
+            </div>
+            <div class="team-member">
+                <h4>John Smith</h4>
+                <p>Head of Marketing</p>
+                <p>John is responsible for spreading the word about our amazing products and ensuring that our customers
+                    have the best shopping experience.</p>
+            </div>
+            <div class="team-member">
+                <h4>Emily Johnson</h4>
+                <p>Customer Service Manager</p>
+                <p>Emily is here to assist you with any questions or concerns you may have about our products and
+                    services.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h3>Contact Us</h3>
+        <p>If you have any questions or comments, please don't hesitate to contact us:</p>
+        <ul>
+            <li>Email: support@perfumestore.com</li>
+            <li>Phone: (123) 456-7890</li>
+            <li>Address: 123 Perfume St, Fragrance City, FC 12345</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>Follow us on
+            <a href="https://www.facebook.com/" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/?lang=ar" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/" class="social-icon instagram"><i class="fab fa-instagram"></i></a>
+        </p>
+        <p>&copy; 2024 Perfume Store. All rights reserved.</p>
+
+    </footer>
+
+</body>
+
+</html>
